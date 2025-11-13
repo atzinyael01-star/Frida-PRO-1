@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Una carta para ti 💌</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #4CA1AF, #C4E0E5);
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #333;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .container {
+      max-width: 800px;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.8s ease;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      background-color: #ff6b6b;
+      border: none;
+      padding: 15px 40px;
+      color: white;
+      font-size: 1.2rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #ff4c4c;
+    }
+
+    .carta {
+      display: none;
+      text-align: left;
+      font-size: 1.2rem;
+      white-space: pre-wrap;
+      line-height: 1.8;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .mostrar {
+      display: block;
+      animation: fadeIn 1s forwards;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    .pregunta {
+      margin-top: 40px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      animation: fadeIn 1s forwards;
+    }
+
+    .opciones {
+      display: flex;
+      gap: 25px;
+      flex-wrap: wrap;
+      justify-content: center;
+      position: relative;
+    }
+
+    .opciones button {
+      background-color: #ff6b6b;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 10px;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: 0.3s;
+      position: relative;
+    }
+
+    .opciones button:hover {
+      background-color: #ff4c4c;
+    }
+
+    .respuesta {
+      font-size: 1.4rem;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #ff4c4c;
+      display: none;
+    }
+
+    footer {
+      margin-top: 30px;
+      font-style: italic;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="container">
+    <h1>💌 Para Frida 💌</h1>
+    <button class="btn" id="abrirBtn">Abrir carta</button>
+
+    <div class="carta" id="carta"></div>
+
+    <div class="pregunta" id="pregunta">
+      <p style="font-size:1.5rem;">¿Me perdonas? </p>
+      <div class="opciones">
+        <button id="siBtn">Sí </button>
+        <button id="noBtn">No </button>
+        <button id="pensarBtn">Déjame pensarlo </button>
+      </div>
+      <div class="respuesta" id="respuesta"></div>
+    </div>
+
+    <footer id="firma"></footer>
+  </div>
+
+  <iframe 
+    width="0" 
+    height="0" 
+    src="https://www.youtube.com/watch?v=hva1lTQZQ8I&list=RDhva1lTQZQ8I&start_radio=1" 
+    frameborder="0" 
+    allow="autoplay"
+    allowfullscreen>
+  </iframe>
+
+  <script>
+    const textoCarta = `Oye Frida,
+Sé que pasaron muchas cosas las cuales no debieron ni suceder. No sé por qué deberías estar conmigo, pero pues sí... te quiero pedir disculpas por lo que pasó el lunes, y también gracias por quedarte conmigo cuando todos se fueron.
+
+Perdón. No quiero que tengas esa imagen de mí. Tengo mucho más que ofrecerte como pareja y como persona. Dame otra oportunidad de demostrártelo.
+
+Perdón por ni siquiera hablar hoy y ayer, pero tengo mucha vergüenza de lo que pasó el lunes, que ni siquiera sé qué hacer.
+
+Voy a cambiar, lo juro. No necesariamente por ti, sino porque no está muy padre todo lo que hago, porque termina afectando a toda la gente a mi alrededor.
+
+Si quieres darte un tiempo conmigo está bien, me lo volví a ganar. Si quieres terminar esto, igualmente está bien, respetaré todas tus decisiones.
+
+Te quiero mucho.
+PERDÓN `;
+
+    const carta = document.getElementById("carta");
+    const btn = document.getElementById("abrirBtn");
+    const firma = document.getElementById("firma");
+    const pregunta = document.getElementById("pregunta");
+    const siBtn = document.getElementById("siBtn");
+    const noBtn = document.getElementById("noBtn");
+    const pensarBtn = document.getElementById("pensarBtn");
+    const respuesta = document.getElementById("respuesta");
+
+    btn.addEventListener("click", () => {
+      btn.style.display = "none";
+      carta.classList.add("mostrar");
+      escribirCarta(textoCarta, carta, () => {
+        firma.textContent = "— Atzin ";
+        setTimeout(() => {
+          pregunta.style.display = "flex";
+        }, 1000);
+      });
+    });
+
+    function escribirCarta(texto, elemento, callback) {
+      let i = 0;
+      const intervalo = setInterval(() => {
+        elemento.textContent += texto.charAt(i);
+        i++;
+        if (i === texto.length) {
+          clearInterval(intervalo);
+          if (callback) callback();
+        }
+      }, 40);
+    }
+
+    siBtn.addEventListener("click", () => {
+      mostrarRespuesta("Gracias por la ultima oportunidad");
+    });
+
+    noBtn.addEventListener("mouseover", moverBoton);
+    noBtn.addEventListener("click", moverBoton);
+
+    pensarBtn.addEventListener("click", () => {
+      mostrarRespuesta("Si logro ser campeon mundial se termina nuestro break");
+    });
+
+    function moverBoton() {
+      const x = Math.random() * 200 - 100;
+      const y = Math.random() * 150 - 75;
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    function mostrarRespuesta(texto) {
+      respuesta.textContent = texto;
+      respuesta.style.display = "block";
+      siBtn.style.display = "none";
+      noBtn.style.display = "none";
+      pensarBtn.style.display = "none";
+    }
+  </script>
+</body>
+</html>
